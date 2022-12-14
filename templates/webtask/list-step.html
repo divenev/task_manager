@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+        <h3>Step list</h3>
+    </section>
+        <section id="details-page" class="details">
+            <form method="get" >
+
+                <input name="search" placeholder="Enter step name:"> </input>
+                <button><b>Search</b></button>
+
+                {% csrf_token %}
+            </form>
+        </section>
+
+    <section id="details-page" class="details">
+        <table style="width:50%" border="1">
+            <tr>
+                <th>
+                    <b>Name</b>
+                </th>
+                <th>
+                    <b>Status</b>
+                </th>
+                <th>
+                    <b>Requirement</b>
+                </th>
+                <th>
+                    <b>Implementation</b>
+                </th>
+                <th>
+                    <b>Employee</b>
+                </th>
+                <th>
+                    <b>Machine</b>
+                </th>
+            </tr>
+            {% for o in object_list %}
+                <tr>
+                    <th>
+                        <a href="{% url 'details step' o.pk%}">
+                            <b>{{ o.name }}</b>
+                        </a>
+                    </th>
+                    <th>
+                        {{ o.status }}
+                    </th>
+                    <th>
+                        {{ o.requirement }}
+                    </th>
+                    <th>
+                        {{ o.implementation }}
+                    </th>
+                    <th>
+                        {{ o.personnel_id }}
+                    </th>
+                    <th>
+                        {{ o.machine_id }}
+                    </th>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+    {% if is_paginated %}
+        <section id="details-page" class="details">
+            {% if  page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Prev <<</a>
+            {% endif %}
+
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">>> Next</a>
+            {% endif %}
+        </section>
+    {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <body>
+    <a>Потребител: {{ user.username }}</a>
+    <a>Роля: {{ user.role }}</a>
+
+    {% if request.user.is_authenticated %}
+        <h3>
+            <a href="{% url 'list personnel' %}">Employee list</a>
+        </h3>
+
+        <h3>
+            <a href="{% url 'list machine' %}">Machine list</a>
+        </h3>
+
+        <h3>
+            <a href="{% url 'list task' %}">Task list</a>
+        </h3>
+
+    {% endif %}
+
+    </body>
+
+    {% csrf_token %}
+
+{% endblock %}

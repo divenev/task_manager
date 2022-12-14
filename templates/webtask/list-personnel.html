@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+        <h3>Employee list</h3>
+    </section>
+    <section id="details-page" class="details">
+        <table style="width:50%" border="1">
+            <tr>
+                <th>
+                    <b>Internal id</b>
+                </th>
+                <th>
+                    <b>Names</b>
+                </th>
+                <th>
+                    <b>Position</b>
+                </th>
+                <th>
+                    <b>Price for day</b>
+                </th>
+                <th>
+                    <b>location</b>
+                </th>
+            </tr>
+            {% for e in object_list %}
+                <tr>
+                    <th>
+                        <a href="{% url 'detail personnel' e.pk %}">
+                            <b>{{ e.internal_id }}</b>
+                        </a>
+                    </th>
+                    <th>
+                        {{ e.name }} {{ e.family }}
+                    </th>
+                    <th>
+                        {{ e.position }}
+                    </th>
+                    <th>
+                        {{ e.price_for_day }}
+                    </th>
+                    <th>
+                        {{ e.location }}
+                    </th>
+                </tr>
+
+            {% endfor %}
+        </table>
+    </section>
+    {% if is_paginated %}
+        <section id="details-page" class="details">
+            {% if  page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Prev <<</a>
+            {% endif %}
+
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">>> Next</a>
+            {% endif %}
+        </section>
+    {% endif %}
+
+
+{% endblock %}

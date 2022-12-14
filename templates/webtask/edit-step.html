@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="create-page" class="create">
+        <form id="create-form" action="{% url 'edit step' object.pk %}" method="POST">
+            <h2>Edit step</h2>
+            {{ form }}
+            {% csrf_token %}
+            <a></a>
+            <input class="button" type="submit" value="Edit step">
+        </form>
+    </section>
+
+
+{% endblock %}

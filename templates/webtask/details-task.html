@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+
+        <div class="book-information">
+
+            <p class="type" style="">Name: {{ object.name }}</p>
+            <p class="type">Status: {{ object.status }} {{ object.family }}</p>
+            <p class="type">Start date: {{ object.start_date }}</p>
+            <p class="type">Requirement: {{ object.requirement }}</p>
+            <p class="type">Description: {{ object.description }}</p>
+            <p class="type">Manager: {{ object.personnel_id }}</p>
+
+        </div>
+    </section>
+
+    <section id="details-page" class="details">
+
+        <div>
+            <a class="button" href="{% url 'create step' object.pk %}"> Enter step </a>
+            <a class="button" href="{% url 'list step' object.pk %}"> View the steps in a task </a>
+            <a class="button" href="{% url 'edit task' object.pk %}"> Update task </a>
+
+        </div>
+    </section>
+
+
+
+{% endblock %}

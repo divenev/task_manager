@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+
+     <div class="book-information">
+
+         <p class="type">Internal id: {{ object.internal_id }}</p>
+         <p class="type">Brand: {{ object.brand }}</p>
+         <p class="type">Model: {{ object.model }}</p>
+         <p class="type">License: {{ object.license }}</p>
+         <p class="type">Price for day: {{ object.price_for_day }}</p>
+
+
+     </div>
+
+    </section>
+
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+
+     <div class="book-information">
+
+         <p class="type">Internal id: {{ object.internal_id }}</p>
+         <p class="type">Names: {{ object.name }} {{ object.family }}</p>
+         <p class="type">Positions: {{ object.position }}</p>
+         <p class="type">Price for day: {{ object.price_for_day }}</p>
+         <p class="type">Location: {% if  object.location%}{{ object.location }}{% endif %}</p>
+
+     </div>
+
+    </section>
+
+
+{% endblock %}

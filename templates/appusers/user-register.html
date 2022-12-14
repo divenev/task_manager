@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="create-page" class="create">
+        <form id="create-form" action="{% url 'user register' %}" method="POST">
+            <h2>User register</h2>
+
+            {{ form }}
+            {% csrf_token %}
+            <a></a>
+
+            <input class="button" type="submit" value="Register">
+
+        </form>
+    </section>
+
+{% endblock %}
+
+
+
+
