@@ -145,7 +145,7 @@ class Task(models.Model):
 
     start_date = models.DateField(
         null=False,
-        blank=False
+        blank=False,
     )
 
     status = models.CharField(
@@ -169,13 +169,13 @@ class Task(models.Model):
 
     personnel_id = models.ForeignKey(
         Personnel,
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         verbose_name='Manager'
     )
 
     profile_id = models.ForeignKey(
         AppUser,
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         verbose_name='created by'
     )
 
@@ -226,20 +226,20 @@ class Step(models.Model):
 
     personnel_id = models.ForeignKey(
         Personnel,
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         verbose_name='Executor'
     )
 
     machine_id = models.ForeignKey(
         Machine,
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         null=True,
         blank=True
     )
 
     task_id = models.ForeignKey(
         Task,
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         null=False,
         blank=False
     )

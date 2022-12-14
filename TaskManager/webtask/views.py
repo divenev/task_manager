@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
-from TaskManager.webtask.forms import CreateTaskForm, CreateStepForm, UpdateTaskForm, UpdateStepForm
+from TaskManager.webtask.forms import CreateTaskForm, CreateStepForm, UpdateTaskForm, UpdateStepForm, \
+    EditPersonnelForm
 from TaskManager.webtask.models import Personnel, Machine, Task, Step, CREATED, \
     IN_PROGRESS, FROZEN
 
@@ -16,6 +17,14 @@ def home_page(request):
         'user': request.user
     }
     return render(request, 'webtask/home-page.html', context)
+
+
+def filter_personnel_id(user_id):
+    try:
+        result = Personnel.objects.get(profile_id=user_id).pk
+    except Personnel.DoesNotExist:
+        result = None
+    return result
 
 
 class CreatePersonnelView(CreateView):
@@ -34,6 +43,24 @@ class ListPersonnelView(ListView):
 class DetailsPersonnelView(DetailView):
     model = Personnel
     template_name = 'webtask/details-personnel.html'
+
+
+class EditPersonnelView(UpdateView):
+    model = Personnel
+    form_class = EditPersonnelForm
+    template_name = 'webtask/edit-personnel.html'
+    success_url = reverse_lazy('home')
+
+    def get_success_url(self):
+        return reverse_lazy('details personnel', kwargs={'pk': self.object.id})
+
+
+class DelPersonnelView(DeleteView):
+    model = Personnel
+    template_name = 'webtask/del-personnel.html'
+    success_url = reverse_lazy('list personnel')
+
+    #TODO on failed deletion it shows the error
 
 
 class CreateMachineView(CreateView):
@@ -139,7 +166,30 @@ class ListStepView(ListView):
             task_id = self.kwargs['pk']
         else:
             task_id = None
+
         queryset = queryset.filter(task_id=task_id)
+
+        if self.__get_search():
+            queryset = queryset.filter(name__icontains=self.__get_search())
+
+        return queryset
+
+    def __get_search(self):
+        search = self.request.GET.get('search', None)
+        return search
+
+
+# TODO new view for staff with steps
+class ListStepForEmplView(ListView):
+    model = Step
+    template_name = 'webtask/list-step.html'
+    paginate_by = PAGINATE_BY
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('step_priority')
+        personnel_id = filter_personnel_id(self.request.user.pk)
+        queryset = queryset.filter(personnel_id=personnel_id)
 
         if self.__get_search():
             queryset = queryset.filter(name__icontains=self.__get_search())
@@ -163,4 +213,3 @@ class EditStepView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('details step', kwargs={'pk': self.object.id})
-

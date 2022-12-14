@@ -1,6 +1,23 @@
 from django import forms
 
-from TaskManager.webtask.models import Task, Step
+from TaskManager.webtask.models import Task, Step, Personnel
+
+
+class EditPersonnelForm(forms.ModelForm):
+    class Meta:
+        model = Personnel
+        fields = '__all__'
+
+
+# class DelPersonnelForm(forms.ModelForm):
+#     class Meta:
+#         model = Personnel
+#         fields = ('internal_id', 'name', 'family', 'position')
+#
+#     def save(self, commit=True):
+#         if commit:
+#             self.instance.delete()
+#         return self.instance
 
 
 class CreateTaskForm(forms.ModelForm):
