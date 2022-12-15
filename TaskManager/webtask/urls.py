@@ -3,7 +3,7 @@ from django.urls import path
 from TaskManager.webtask.views import home_page, CreatePersonnelView, CreateMachineView, \
     CreateTaskView, ListPersonnelView, DetailsPersonnelView, ListMachineView, ListTaskView, \
     DetailsTaskView, CreateStepView, DetailsMachineView, EditTaskView, ListStepView, \
-    DetailsStepView, EditStepView, ListStepForEmplView, DelPersonnelView, EditPersonnelView
+    DetailsStepView, EditStepView, ListStepForEmplView, EditPersonnelView, DeletePersonnelView
 
 urlpatterns = [
     path('', home_page, name='home'),
@@ -11,7 +11,7 @@ urlpatterns = [
     path('personnel/list/', ListPersonnelView.as_view(), name='list personnel'),
     path('personnel/details/<int:pk>/', DetailsPersonnelView.as_view(), name='details personnel'),
     path('personnel/edit/<int:pk>/', EditPersonnelView.as_view(), name='edit personnel'),
-    path('personnel/delete/<int:pk>/', DelPersonnelView.as_view(), name='del personnel'),
+    path('personnel/delete/<int:pk>/', DeletePersonnelView, name='del personnel'),
     path('machine/', CreateMachineView.as_view(), name='create machine'),
     path('machine/list/', ListMachineView.as_view(), name='list machine'),
     path('machine/details/<int:pk>/', DetailsMachineView.as_view(), name='details machine'),

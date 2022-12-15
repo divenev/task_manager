@@ -9,15 +9,15 @@ class EditPersonnelForm(forms.ModelForm):
         fields = '__all__'
 
 
-# class DelPersonnelForm(forms.ModelForm):
-#     class Meta:
-#         model = Personnel
-#         fields = ('internal_id', 'name', 'family', 'position')
-#
-#     def save(self, commit=True):
-#         if commit:
-#             self.instance.delete()
-#         return self.instance
+class DelPersonnelForm(forms.ModelForm):
+    class Meta:
+        model = Personnel
+        fields = ()
+
+    def save(self, commit=True):
+        if commit:
+            self.instance.delete()
+        return self.instance
 
 
 class CreateTaskForm(forms.ModelForm):

@@ -1,10 +1,13 @@
+from builtins import super
+
 from django.contrib.auth import get_user_model
+from django.db.models import RestrictedError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 from TaskManager.webtask.forms import CreateTaskForm, CreateStepForm, UpdateTaskForm, UpdateStepForm, \
-    EditPersonnelForm
+    EditPersonnelForm, DelPersonnelForm
 from TaskManager.webtask.models import Personnel, Machine, Task, Step, CREATED, \
     IN_PROGRESS, FROZEN
 
@@ -22,7 +25,7 @@ def home_page(request):
 def filter_personnel_id(user_id):
     try:
         result = Personnel.objects.get(profile_id=user_id).pk
-    except Personnel.DoesNotExist:
+    except:
         result = None
     return result
 
@@ -55,12 +58,35 @@ class EditPersonnelView(UpdateView):
         return reverse_lazy('details personnel', kwargs={'pk': self.object.id})
 
 
-class DelPersonnelView(DeleteView):
-    model = Personnel
-    template_name = 'webtask/del-personnel.html'
-    success_url = reverse_lazy('list personnel')
+# class DelPersonnelView(DeleteView):
+#     model = Personnel
+#     template_name = 'webtask/del-personnel.html'
+#     success_url = reverse_lazy('list personnel')
+#     # TODO on failed deletion it shows the error
 
-    #TODO on failed deletion it shows the error
+
+def DeletePersonnelView(request, pk):
+    personnel = Personnel.objects.get(pk=pk)
+
+    if request.method == 'GET':
+        form = DelPersonnelForm(instance=personnel)
+    else:
+        form = DelPersonnelForm(request.POST, instance=personnel)
+        if form.is_valid():
+            try:
+                form.save()
+            except RestrictedError:
+                context = {
+                    'message': f'The employee can\'t be deleted.'
+                }
+                return render(request, 'webtask/error_template.html', context)
+            return redirect('list personnel')
+
+    context = {
+        'form': form,
+        'object': personnel
+    }
+    return render(request, 'webtask/del-personnel.html', context)
 
 
 class CreateMachineView(CreateView):
@@ -179,7 +205,6 @@ class ListStepView(ListView):
         return search
 
 
-# TODO new view for staff with steps
 class ListStepForEmplView(ListView):
     model = Step
     template_name = 'webtask/list-step.html'
