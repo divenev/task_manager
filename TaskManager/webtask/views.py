@@ -42,10 +42,12 @@ class CreatePersonnelView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            raise PermissionError('Access denied')
+            raise
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class ListPersonnelView(ListView):
@@ -59,6 +61,8 @@ class ListPersonnelView(ListView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class DetailsPersonnelView(DetailView):
@@ -71,6 +75,8 @@ class DetailsPersonnelView(DetailView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class EditPersonnelView(UpdateView):
@@ -85,6 +91,8 @@ class EditPersonnelView(UpdateView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_success_url(self):
         return reverse_lazy('details personnel', kwargs={'pk': self.object.id})
@@ -130,6 +138,8 @@ class CreateMachineView(CreateView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class DetailsMachineView(DetailView):
@@ -142,6 +152,8 @@ class DetailsMachineView(DetailView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class ListMachineView(ListView):
@@ -155,6 +167,8 @@ class ListMachineView(ListView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class CreateTaskView(CreateView):
@@ -167,6 +181,8 @@ class CreateTaskView(CreateView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
@@ -189,6 +205,8 @@ class EditTaskView(UpdateView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_success_url(self):
         return reverse_lazy('details task', kwargs={'pk': self.object.id})
@@ -205,6 +223,8 @@ class ListTaskView(ListView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -232,6 +252,8 @@ class DetailsTaskView(DetailView):
         elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 def CreateStepView(request, **kwargs):
@@ -274,6 +296,8 @@ class ListStepView(ListView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -303,6 +327,8 @@ class ListStepForEmplView(ListView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -328,6 +354,8 @@ class DetailsStepView(DetailView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
 
 class EditStepView(UpdateView):
@@ -341,6 +369,8 @@ class EditStepView(UpdateView):
         elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+        else:
+            raise PermissionError('Access denied')
 
     def get_success_url(self):
         return reverse_lazy('details step', kwargs={'pk': self.object.id})
