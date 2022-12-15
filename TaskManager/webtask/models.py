@@ -131,7 +131,7 @@ class Machine(models.Model):
     )
 
     def __str__(self):
-        return f'№{self.internal_id} - {self.model} {self.brand}'
+        return f'№{self.internal_id} - {self.brand} {self.model} '
 
 
 class Task(models.Model):

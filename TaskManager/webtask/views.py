@@ -5,6 +5,7 @@ from django.db.models import RestrictedError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from TaskManager.appuser.models import ADMINISTRATOR, MANAGER, STAFF
 
 from TaskManager.webtask.forms import CreateTaskForm, CreateStepForm, UpdateTaskForm, UpdateStepForm, \
     EditPersonnelForm, DelPersonnelForm
@@ -13,6 +14,9 @@ from TaskManager.webtask.models import Personnel, Machine, Task, Step, CREATED, 
 
 UserModel = get_user_model()
 PAGINATE_BY = 8
+ADMINISTRATOR = ADMINISTRATOR
+MANAGER = MANAGER
+STAFF = STAFF
 
 
 def home_page(request):
@@ -25,7 +29,7 @@ def home_page(request):
 def filter_personnel_id(user_id):
     try:
         result = Personnel.objects.get(profile_id=user_id).pk
-    except:
+    except Personnel.DoesNotExist:
         result = None
     return result
 
@@ -36,16 +40,37 @@ class CreatePersonnelView(CreateView):
     template_name = 'webtask/create-personnel.html'
     success_url = reverse_lazy('home')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 class ListPersonnelView(ListView):
     model = Personnel
     template_name = 'webtask/list-personnel.html'
     paginate_by = PAGINATE_BY
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 class DetailsPersonnelView(DetailView):
     model = Personnel
     template_name = 'webtask/details-personnel.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
 
 
 class EditPersonnelView(UpdateView):
@@ -54,20 +79,24 @@ class EditPersonnelView(UpdateView):
     template_name = 'webtask/edit-personnel.html'
     success_url = reverse_lazy('home')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
     def get_success_url(self):
         return reverse_lazy('details personnel', kwargs={'pk': self.object.id})
 
 
-# class DelPersonnelView(DeleteView):
-#     model = Personnel
-#     template_name = 'webtask/del-personnel.html'
-#     success_url = reverse_lazy('list personnel')
-#     # TODO on failed deletion it shows the error
-
-
 def DeletePersonnelView(request, pk):
-    personnel = Personnel.objects.get(pk=pk)
+    if not request.user.is_authenticated:
+        raise PermissionError('Access denied')
+    elif not request.user.role in (ADMINISTRATOR, MANAGER):
+        raise PermissionError('Access denied')
 
+    personnel = Personnel.objects.get(pk=pk)
     if request.method == 'GET':
         form = DelPersonnelForm(instance=personnel)
     else:
@@ -95,10 +124,24 @@ class CreateMachineView(CreateView):
     template_name = 'webtask/create-machine.html'
     success_url = reverse_lazy('home')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 class DetailsMachineView(DetailView):
     model = Machine
     template_name = 'webtask/details-machine.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
 
 
 class ListMachineView(ListView):
@@ -106,10 +149,24 @@ class ListMachineView(ListView):
     template_name = 'webtask/list-machine.html'
     paginate_by = PAGINATE_BY
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 class CreateTaskView(CreateView):
     form_class = CreateTaskForm
     template_name = 'webtask/create-task.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
@@ -126,6 +183,13 @@ class EditTaskView(UpdateView):
     form_class = UpdateTaskForm
     template_name = 'webtask/edit-task.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
     def get_success_url(self):
         return reverse_lazy('details task', kwargs={'pk': self.object.id})
 
@@ -134,6 +198,13 @@ class ListTaskView(ListView):
     model = Task
     template_name = 'webtask/list-task.html'
     paginate_by = PAGINATE_BY
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -155,8 +226,20 @@ class DetailsTaskView(DetailView):
     model = Task
     template_name = 'webtask/details-task.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 def CreateStepView(request, **kwargs):
+    if not request.user.is_authenticated:
+        raise PermissionError('Access denied')
+    elif not request.user.role in (ADMINISTRATOR, MANAGER):
+        raise PermissionError('Access denied')
+
     if 'pk' in kwargs:
         task_id = kwargs['pk']
     else:
@@ -185,6 +268,13 @@ class ListStepView(ListView):
     template_name = 'webtask/list-step.html'
     paginate_by = PAGINATE_BY
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.order_by('step_priority')
@@ -192,12 +282,9 @@ class ListStepView(ListView):
             task_id = self.kwargs['pk']
         else:
             task_id = None
-
         queryset = queryset.filter(task_id=task_id)
-
         if self.__get_search():
             queryset = queryset.filter(name__icontains=self.__get_search())
-
         return queryset
 
     def __get_search(self):
@@ -210,15 +297,20 @@ class ListStepForEmplView(ListView):
     template_name = 'webtask/list-step.html'
     paginate_by = PAGINATE_BY
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.order_by('step_priority')
         personnel_id = filter_personnel_id(self.request.user.pk)
         queryset = queryset.filter(personnel_id=personnel_id)
-
         if self.__get_search():
             queryset = queryset.filter(name__icontains=self.__get_search())
-
         return queryset
 
     def __get_search(self):
@@ -230,11 +322,25 @@ class DetailsStepView(DetailView):
     model = Step
     template_name = 'webtask/details-step.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
+
 
 class EditStepView(UpdateView):
     model = Step
     form_class = UpdateStepForm
     template_name = 'webtask/edit-step.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise PermissionError('Access denied')
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+            dispatch = super().dispatch(request, *args, **kwargs)
+            return dispatch
 
     def get_success_url(self):
         return reverse_lazy('details step', kwargs={'pk': self.object.id})

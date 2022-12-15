@@ -1,7 +1,6 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import request
-from django.shortcuts import render
+
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -25,6 +24,3 @@ class RegisterUserView(CreateView):
 
 class LogoutUserView(LogoutView):
     next_page = reverse_lazy('home')
-
-
-

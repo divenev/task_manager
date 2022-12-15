@@ -25,3 +25,4 @@ urlpatterns = [
     path('step/details/<int:pk>/', DetailsStepView.as_view(), name='details step'),
     path('step/edit/<int:pk>/', EditStepView.as_view(), name='edit step')
 ]
+

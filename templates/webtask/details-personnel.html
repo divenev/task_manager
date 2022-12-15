@@ -3,16 +3,21 @@
 
     <section id="details-page" class="details">
 
-     <div class="book-information">
+        <div class="obj-information">
 
-         <p class="type">Internal id: {{ object.internal_id }}</p>
-         <p class="type">Names: {{ object.name }} {{ object.family }}</p>
-         <p class="type">Positions: {{ object.position }}</p>
-         <p class="type">Price for day: {{ object.price_for_day }}</p>
-         <p class="type">Location: {% if  object.location%}{{ object.location }}{% endif %}</p>
+            <p class="type">Internal id: {{ object.internal_id }}</p>
+            <p class="type">Names: {{ object.name }} {{ object.family }}</p>
+            <p class="type">Positions: {{ object.position }}</p>
+            <p class="type">Price for day: {{ object.price_for_day }}</p>
+            <p class="type">Location: {% if  object.location %}{{ object.location }}{% endif %}</p>
+        </div>
+    </section>
 
-     </div>
-
+    <section id="details-page" class="details">
+        <a class="button" href="{% url 'edit personnel' object.pk %}"> Edit employee </a>
+        <a class="button" href="{% url 'del personnel' object.pk %}"> Delete employee </a>
+    {{ form }}
+    {% csrf_token %}
     </section>
 
 

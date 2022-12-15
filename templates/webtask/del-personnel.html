@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+        <h2>Delete employee</h2>
+    </section>
+
+    <section id="details-page" class="details">
+        <div class="obj-information">
+            <p class="type" style="color: red">Internal id: {{ object.internal_id }}</p>
+            <p class="type" style="color: red">Names: {{ object.name }} {{ object.family }}</p>
+            <p class="type" style="color: red">Positions: {{ object.position }}</p>
+            <p class="type" style="color: red">Price for day: {{ object.price_for_day }}</p>
+            <p class="type" style="color: red">Location: {% if  object.location %}{{ object.location }}{% endif %}</p>
+        </div>
+    </section>
+    <section id="details-page" class="details">
+        <form id="create-form" action="{% url 'del personnel' object.pk %}" method="POST">
+            <input class="button" type="submit" style="background-color: #8f8f8f" value="Delete employee">
+            {{ form }}
+            {% csrf_token %}
+        </form>
+    </section>
+
+
+{% endblock %}

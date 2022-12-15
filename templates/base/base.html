@@ -5,44 +5,45 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="{% static 'images/task.jpg' %}" type="image/x-icon" />
-    <link rel="stylesheet" href="{% static  'css/styles.css'%}">
+    <link rel="icon" href="{% static 'images/task.jpg' %}" type="image/x-icon"/>
+    <link rel="stylesheet" href="{% static  'css/styles.css' %}">
     <title>Online Task Manager</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'static/favicon.ico' %}"/>
 </head>
 
 <body>
-    <div id="container">
-        <header id="site-header">
+<div id="container">
+    <header id="site-header">
 
-            <!-- Navigation -->
-            <nav class="navbar">
-                <section class="navbar-dashboard">
-                    <a href="/">Dashboard</a>
-                    <div id="user">
-                        {% if request.user.is_authenticated %}
+        <nav class="navbar">
+            <section class="navbar-dashboard">
+                <a href="/">Dashboard</a>
+                <div id="user">
+                    {% if request.user.is_authenticated %}
                         <span>Welcome, {{ request.user.username }}</span>
-                        <a class="button" href="{% url 'create personnel' %}">Add employee</a>
-                        <a class="button" href="{% url 'create machine' %}">Add machine</a>
-                        <a class="button" href="{% url 'create task' %}">Add task</a>
+                        {% if not request.user.role == 'staff' %}
+                            <a class="button" href="{% url 'create personnel' %}">Add employee</a>
+                            <a class="button" href="{% url 'create machine' %}">Add machine</a>
+                            <a class="button" href="{% url 'create task' %}">Add task</a>
+                        {% endif %}
                         <a> </a>
                         <a class="button" style="background-color: #8f8f8f" href="{% url 'user logout' %}">Logout</a>
-                        {% else %}
+                    {% else %}
                         <a class="button" href="{% url 'user login' %}">Login</a>
                         <a class="button" href="{% url 'user register' %}">Register</a>
-                        {% endif %}
-                    </div>
-                </section>
-            </nav>
-        </header>
+                    {% endif %}
+                </div>
+            </section>
+        </nav>
+    </header>
 
-        {% block page_content %}
-        {% endblock %}
+    {% block page_content %}
+    {% endblock %}
 
-        <footer id="site-footer">
-            <p>Python Web Framework</p>
-        </footer>
-    </div>
+    <footer id="site-footer">
+        <p>Python Web Framework</p>
+    </footer>
+</div>
 </body>
 
 </html>

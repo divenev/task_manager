@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+        <h2 style="color: red">Unauthorized operation</h2>
+    </section>
+    <section id="details-page" class="details">
+        <h3>{{ message }}</h3>
+    </section>
+    <section id="details-page" class="details">
+        <a class="button" href="{% url 'home' %}"> Go to home page </a>
+    </section>
+
+    {% csrf_token %}
+
+{% endblock %}

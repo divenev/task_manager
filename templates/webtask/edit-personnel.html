@@ -2,14 +2,13 @@
 {% block page_content %}
 
     <section id="create-page" class="create">
-        <form id="create-form" action="{% url 'create personnel' %}" method="POST">
-            <h2>Create employee</h2>
+        <form id="create-form" action="{% url 'edit personnel' object.pk %}" method="POST">
+            <h2>Edit employee</h2>
             {{ form }}
             {% csrf_token %}
             <a></a>
-            <input class="button" type="submit" value="Create employee">
+            <input class="button" type="submit" value="Edit employee">
         </form>
     </section>
-
 
 {% endblock %}
