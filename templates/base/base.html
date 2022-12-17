@@ -18,6 +18,11 @@
         <nav class="navbar">
             <section class="navbar-dashboard">
                 <a href="/">Dashboard</a>
+                {% if request.user.role == 'administrator' %}
+                    <a href="{% url 'user list' %}">Users</a>
+                {% endif %}
+                <a> </a>
+                <a> </a>
                 <div id="user">
                     {% if request.user.is_authenticated %}
                         <span>Welcome, {{ request.user.username }}</span>

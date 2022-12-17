@@ -16,12 +16,17 @@ MAX_LENGTH_STATUS = 25
 ADMINISTRATOR = 'administrator'
 MANAGER = 'manager'
 STAFF = 'staff'
+READ_ONLY = 'read_only'
+WITHOUT_DELETE = 'without_delete'
 
 
 class GroupChoices(ChoicesEnum, Enum):
     administrator = ADMINISTRATOR
     manager = MANAGER
+    without_delete = WITHOUT_DELETE
     staff = STAFF
+    read_only = READ_ONLY
+
 
 
 class AppUser(AbstractUser):

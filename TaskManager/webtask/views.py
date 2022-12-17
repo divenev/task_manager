@@ -5,7 +5,7 @@ from django.db.models import RestrictedError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
-from TaskManager.appuser.models import ADMINISTRATOR, MANAGER, STAFF
+from TaskManager.appuser.models import ADMINISTRATOR, MANAGER, WITHOUT_DELETE, STAFF, READ_ONLY
 
 from TaskManager.webtask.forms import CreateTaskForm, CreateStepForm, UpdateTaskForm, UpdateStepForm, \
     EditPersonnelForm, DelPersonnelForm
@@ -43,7 +43,7 @@ class CreatePersonnelView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -58,7 +58,7 @@ class ListPersonnelView(ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -72,7 +72,7 @@ class DetailsPersonnelView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER,WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -88,7 +88,7 @@ class EditPersonnelView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -135,7 +135,7 @@ class CreateMachineView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE,):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -149,7 +149,7 @@ class DetailsMachineView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -164,7 +164,7 @@ class ListMachineView(ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -178,7 +178,7 @@ class CreateTaskView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -202,7 +202,7 @@ class EditTaskView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -220,7 +220,7 @@ class ListTaskView(ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -249,7 +249,7 @@ class DetailsTaskView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -259,7 +259,7 @@ class DetailsTaskView(DetailView):
 def CreateStepView(request, **kwargs):
     if not request.user.is_authenticated:
         raise PermissionError('Access denied')
-    elif not request.user.role in (ADMINISTRATOR, MANAGER):
+    elif not request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE):
         raise PermissionError('Access denied')
 
     if 'pk' in kwargs:
@@ -293,7 +293,7 @@ class ListStepView(ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -324,7 +324,7 @@ class ListStepForEmplView(ListView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -351,7 +351,7 @@ class DetailsStepView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
         else:
@@ -366,9 +366,22 @@ class EditStepView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF):
+        elif request.user.role in (ADMINISTRATOR, MANAGER):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+
+        elif request.user.role in (STAFF,):
+            try:
+                step_id = kwargs['pk']
+                user_id = filter_personnel_id(self.request.user.pk)
+                # personnel_id = Step.objects.raw(f'SELECT * from webtask_step where id={step_id}')[0].personnel_id_id
+                if Step.objects.get(pk=step_id).personnel_id.pk == user_id:
+                    dispatch = super().dispatch(request, *args, **kwargs)
+                    return dispatch
+                else:
+                    raise
+            except:
+                raise PermissionError('Access denied')
         else:
             raise PermissionError('Access denied')
 

@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="create-page" class="create">
+        <form id="create-form" action="{% url 'user edit' object.pk %}" method="POST">
+            <h2>Edit user</h2>
+            {{ form }}
+            {% csrf_token %}
+            <a></a>
+            <input class="button" type="submit" value="Edit user">
+        </form>
+    </section>
+
+{% endblock %}

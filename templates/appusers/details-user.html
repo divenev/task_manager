@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% block page_content %}
+
+    <section id="details-page" class="details">
+        <div class="obj-information">
+            <h3> User details</h3>
+            <p></p>
+            <p class="type"><b>Username: </b>{{ object.username }}</p>
+            <p class="type"><b>Role: </b>{{ object.role }} {{ object.family }}</p>
+            <p class="type"><b>Last login: </b>{{ object.last_login }}</p>
+            <p class="type"><b>Date joined: </b>{{ object.date_joined }}</p>
+            <p class="type"><b>Active status: </b>{{ object.is_active }}</p>
+        </div>
+    </section>
+
+    <section id="details-page" class="details">
+                <a class="button" href="{% url 'user edit' object.pk %}"> Edit user </a>
+        {#        <a class="button" href="{% url '' object.pk %}"> Delete User </a>#}
+        {{ form }}
+        {% csrf_token %}
+    </section>
+
+
+{% endblock %}
