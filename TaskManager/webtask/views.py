@@ -351,9 +351,25 @@ class DetailsStepView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             raise PermissionError('Access denied')
-        elif request.user.role in (ADMINISTRATOR, MANAGER, STAFF, WITHOUT_DELETE, READ_ONLY):
+        elif request.user.role in (ADMINISTRATOR, MANAGER, WITHOUT_DELETE, READ_ONLY):
             dispatch = super().dispatch(request, *args, **kwargs)
             return dispatch
+
+        # - only staff
+        elif request.user.role in (STAFF,):
+            try:
+                step_id = kwargs['pk']
+                user_id = filter_personnel_id(self.request.user.pk)
+                # personnel_id = Step.objects.raw(f'SELECT * from webtask_step where id={step_id}')[0].personnel_id_id
+                if Step.objects.get(pk=step_id).personnel_id.pk == user_id:
+                    dispatch = super().dispatch(request, *args, **kwargs)
+                    return dispatch
+                else:
+                    raise
+            except:
+                raise PermissionError('Access denied')
+        # - only staff
+
         else:
             raise PermissionError('Access denied')
 
