@@ -28,7 +28,6 @@ class GroupChoices(ChoicesEnum, Enum):
     read_only = READ_ONLY
 
 
-
 class AppUser(AbstractUser):
     username = models.CharField(
         unique=True,
